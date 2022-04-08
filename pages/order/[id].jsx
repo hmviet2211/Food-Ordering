@@ -1,8 +1,19 @@
 import React from 'react'
 import styles from '../../styles/Order.module.css'
 import Image from 'next/image'
-export default function Order() {
-    const status = 0
+import axios from 'axios'
+
+export async function getServerSideProps({params}){
+    const res = await axios.get(`http://localhost:3000/api/orders/${params.id}`)
+    return {
+        props: {
+            order: res.data
+        }
+    }
+}
+
+export default function Order({order}) {
+    const status = order.status
     const statusClass = (index)=>{
         if(index-status<1){
             return styles.done
@@ -28,18 +39,18 @@ export default function Order() {
                         </tr>
                         <tr className={styles.tr}>
                             <td>
-                                <span className={styles.id}>#124545</span>
+                                <span className={styles.id}>{order._id}</span>
                             </td>
                             <td>
                                 <span className={styles.name}>
-                                    Viet Hoang
+                                    {order.customer}
                                 </span>
                             </td>
                             <td>
-                                <span className={styles.address}>Ha Noi Viet Nam</span>
+                                <span className={styles.address}>{order.address}</span>
                             </td>
                             <td>
-                                <span className={styles.total}>$39.80</span>
+                                <span className={styles.total}>${order.total}</span>
                             </td>
                         </tr>
                     </table>
@@ -103,13 +114,13 @@ export default function Order() {
                 <div className={styles.wrapper}>
                     <h2 className={styles.title}>CART TOTAL</h2>
                     <div className={styles.totalText}>
-                        <b className={styles.totalTextTitle}>Subtotal:</b>$79.60
+                        <b className={styles.totalTextTitle}>Subtotal:</b>${order.total}
                     </div>
                     <div className={styles.totalText}>
                         <b className={styles.totalTextTitle}>Discount:</b>$0.00
                     </div>
                     <div className={styles.totalText}>
-                        <b className={styles.totalTextTitle}>Total:</b>$79.60
+                        <b className={styles.totalTextTitle}>Total:</b>${order.total}
                     </div>
                     <button disabled className={styles.button}>PAID</button>
                 </div>

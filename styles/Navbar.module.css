@@ -15,6 +15,7 @@
     display: flex;
     align-items: center;
     color: white;
+    cursor: pointer;
 }
 
 .item:nth-child(2){
